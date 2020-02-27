@@ -1,3 +1,17 @@
+# SENG300 - Project - Group 14
+---
+## About
+This software will be a web-based platform allowing researchers to submit journals, read reviewers comments on their submissions, resubmit edited journals, and withdraw journals (if they so choose). Reviewers will be able to read the journals they are required to, make comments on the journals, and decide whether a submission: requires a major revision, requires a minor revision, is accepted, or is rejected.
+---
+## Team
+Joshua Novak
+Teo Tebeica
+Macks Tam
+Spencer Tam
+Cody Stasyk
+---
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
