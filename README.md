@@ -8,7 +8,7 @@ This web-based software will allow researchers to submit journals, view comments
 
 ## Team
 * Joshua Novak
-* Teo Tebeica
+* Teodor Tebeica
 * Macks Tam
 * Spencer Tam
 * Cody Stasyk  
