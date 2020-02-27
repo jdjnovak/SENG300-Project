@@ -2,14 +2,17 @@
 ---
 ## About  
 
-This web-based software will allow researchers to submit journals, view comments submitted by reviewers, resubmited edited journals, and withdraw journals (if they so choose). Reviewers will be able to read journals, make comments, and decide on a journals submission status (major revision req'd, minor revision req'd, accept a journal, or reject a journal).
+This web-based software will allow researchers to submit journals, view comments submitted by reviewers, resubmited edited journals, and withdraw journals (if they so choose). Reviewers will be able to read journals, make comments, and decide on a journals submission status (major revision req'd, minor revision req'd, accept a journal, or reject a journal).  
+
 ---
+
 ## Team
-Joshua Novak
-Teo Tebeica
-Macks Tam
-Spencer Tam
-Cody Stasyk
+* Joshua Novak
+* Teo Tebeica
+* Macks Tam
+* Spencer Tam
+* Cody Stasyk  
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
