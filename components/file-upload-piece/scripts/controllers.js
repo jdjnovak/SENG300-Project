@@ -1,3 +1,10 @@
+/* 
+    --- Attribution ---
+    Credit must be given to Harshit Jain for his tutorials found here:
+    https://pragmaapps.com/cloud-storage-firebase-tutorial/
+    https://pragmaapps.com/contacts-app-firebase-angularjs/
+*/
+
 function UploadCtrl($scope, $firebaseStorage, $firebaseObject) {
 
     let fileToUpload = null;
