@@ -1,0 +1,109 @@
+<!-- A basic version of a .pdf file upload/download server interface.  
+     We'll need to add authentication and perhaps sessions to this.
+     Should be good enough for a first iteration :)
+-->
+
+<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title page-title>PDF file upload prototype - SENG 300, Group 14</title>
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" />
+
+  <style>
+    body {font-family:"Open Sans", sans-serif}
+  </style>
+</head>
+
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Journal Upload Prototype...</a>
+    </div>
+  </div>
+  </nav>
+
+  <!-- Some front-end helpers:  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/angular-datatables.min.js"></script>
+
+
+  <!-- Using Google's Firebase database/file server/cloud platform services...  -->
+  <script>
+    // Cody's ultra-basic Firebase configuration:
+    var firebaseConfig = {
+      apiKey: "AIzaSyCF2YPH99BVMEJCT4gAAuLwAUAaniHNwxM",
+      authDomain: "journaldemo300.firebaseapp.com",
+      databaseURL: "https://journaldemo300.firebaseio.com",
+      projectId: "journaldemo300",
+      storageBucket: "journaldemo300.appspot.com",
+      messagingSenderId: "209896766188",
+      appId: "1:209896766188:web:92169630f8de9a315643c9",
+      measurementId: "G-C7080H2SY2"
+    };
+    firebase.initializeApp(firebaseConfig);  // Initializes Firebase
+  </script>
+
+
+  <!-- including the two additional files for this thing...  -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controllers.js"></script>
+
+
+  <!-- The actual interface you see:  -->
+  <div class="container">
+
+    <div ng-controller="UploadCtrl">
+      <form name="uploadForm" ng-submit="upload()">
+        <h3>Upload a Journal:</h3>
+        <div class="input-group">
+          <input accept=".pdf" type="file" class="form-control" onchange="angular.element(this).scope().onChange(this.files)" />
+          <div class="input-group-btn">
+            <button class="btn btn-default" type="submit">Upload</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    <div ng-controller="tableCtrl" style="padding-top: 30px">
+      <h3>View Journals:</h3>
+      <table datatable="ng" class="table row-border table-striped table-hover compact display">
+      <thead>
+        <tr>
+          <th>Upload Date</th>
+          <th>Name</th>
+          <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(key,value) in files">
+          <td>{{value.timestamp | date}}</td>
+          <td>{{value.name}}</td>
+          <td>
+            <a href="{{value.url}}" class="btn btn-default" target="_blank">Download</a>
+            <a href="#" class="btn btn-default" ng-click="delete(key, value.name)">Delete</a>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+
+  </div>  <!-- /class="container" -->
+
+
+</body>
+</html>
