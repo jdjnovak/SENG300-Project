@@ -1,0 +1,20 @@
+{
+  "comments":[
+    {
+      "id":"0",
+      "reviewer":"Jane Doe",
+      "paper-reviewed":"Title of Paper",
+      "body":"This is a large improvement from the last submission. However, points four and seven are still require more fleshing out.",
+      "decision":"Major Revision Required",
+      "date":"08-02-2020"
+    },
+    {
+      "id":"1",
+      "reviewer":"Tim Faraan",
+      "paper-reviewed":"Title of Paper",
+      "body":"The introduction is still weak. The points have improved greatly since my last comments. Please work on the introduction to make it flow better into the beginning of the analysis.",
+      "decision":"Minor Revision Required",
+      "date":"13-02-2020"
+    }
+  ]
+}
