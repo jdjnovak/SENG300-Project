@@ -6,6 +6,11 @@ If you wish to run this application, you will need to supply your own Firebase c
 
 In the project directory, you can run:
 
+
+### `yarn install`
+
+To install all the node modules needed to run the application.
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
