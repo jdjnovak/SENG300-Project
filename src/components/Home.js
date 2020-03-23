@@ -42,18 +42,22 @@ function Home() {
 	return (
       <div id="submission-summary" className="pt-5">
         <h1 className="text-center">Review your submissions</h1>
-        <Container >
+        <Container>
           <Row>
-            <Col className="text-right">Last submitted paper:</Col>
-            <Col>{GetLastSubmitDate()}</Col>
+            <Container>
+              <Row>
+                <Col className="text-right">Last submitted paper:</Col>
+                <Col>{GetLastSubmitDate()}</Col>
+              </Row>
+              <Row>
+                <Col className="text-right">Status:</Col>
+                <Col>{GetJournalStatus()}</Col>
+              </Row>
+              <br/>
+              <h3 className="pt-5, text-center">Comments</h3>
+              <CommentsTable />
+            </Container>
           </Row>
-          <Row>
-            <Col className="text-right">Status:</Col>
-            <Col>{GetJournalStatus()}</Col>
-          </Row>
-          <br/>
-          <h3 className="pt-5, text-center">Comments</h3>
-          <CommentsTable />
         </Container>
       </div>
 	);
