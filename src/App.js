@@ -9,6 +9,7 @@ import Home from './components/Home.js';
 import Upload from './components/Upload.js';
 import NotFound from './components/NotFound.js';
 import LoginWindow from './components/Login.js';
+import Admin from './components/Admin.js';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -29,6 +30,7 @@ function App() {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
+              <Nav.Link href="/admin">Admin</Nav.Link>
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/upload">Upload</Nav.Link>
               </Nav>
@@ -40,6 +42,7 @@ function App() {
           <Router>
 			<div id="content-section">
               <Switch>
+                <Route path="/admin" component={Admin} />
                 <Route exact path="/" component={Home} />
                 <Route path="/upload" component={Upload} />
                 <Route component={NotFound} />
