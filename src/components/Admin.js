@@ -20,6 +20,7 @@ class Admin extends React.Component {
     let nam = event.target.name;
     let val = event.target.value;
     this.setState({[nam]: val});
+    // need to handle the checkboxes differently
   }
 
   mySubmitHandler = (event) => {
