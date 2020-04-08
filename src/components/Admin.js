@@ -10,16 +10,17 @@ class Admin extends React.Component {
       password: '',
       fName: '',
       lName: '',
-      isResearcher: null,
-      isReviewer: null,
-      isEditor: null
+      isResearcher: false,
+      isReviewer: false,
+      isEditor: false
     };
   }
 
+
   myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({[nam]: val});
+    let name = event.target.name;
+    let val = (name === 'isResearcher' || name === 'isReviewer' || name === 'isEditor') ? event.target.checked : event.target.value;
+    this.setState({[name]: val});
     // need to handle the checkboxes differently
   }
 
@@ -28,6 +29,7 @@ class Admin extends React.Component {
     alert("You are adding a new user to the database");
 
   }
+
 
   render() {
     return (
@@ -124,9 +126,9 @@ class Admin extends React.Component {
           {this.state.password}<br/>
           {this.state.fName}<br/>
           {this.state.lName}<br/>
-          {this.state.isResearcher}<br/>
-          {this.state.isReviewer}<br/>
-          {this.state.isEditor}
+          {this.state.isResearcher ? "is a researcher" : ""}<br/>
+          {this.state.isReviewer  ? "is a reviewer" : ""}<br/>
+          {this.state.isEditor  ? "is an editor" : ""}
         </div>
 
       </div>
