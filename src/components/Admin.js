@@ -10,12 +10,26 @@ class Admin extends React.Component {
       password: '',
       fName: '',
       lName: '',
-      isResearcher: false,
-      isReviewer: false,
+      isResearcher: false, 
+      isReviewer: false, 
       isEditor: false
     };
   }
 
+
+
+  callAPI = () => {  
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(this.state)  // convert the state to JSON and send it as the POST body    
+    };
+    fetch('http://localhost:9000/adminAPI', options)
+      .then((response) => response.text())
+      .then((responseTEXT) => {
+        alert(responseTEXT);
+      });
+  }
 
   myChangeHandler = (event) => {
     let name = event.target.name;
@@ -25,22 +39,21 @@ class Admin extends React.Component {
   }
 
   mySubmitHandler = (event) => {
-    event.preventDefault();
-    alert("You are adding a new user to the database");
-
+    this.callAPI();
   }
+
 
 
   render() {
     return (
-      <div id="adminContainer" style={{margin: "60px auto 0", width: "420px", height: "400px;"}}>
-        <h1>Admin Control Pannel</h1><br />
+      <div id="adminContainer" style={{margin: "60px auto 0", width: "420px"}}>
+        <h1>Admin Control Panel</h1><br />
         <h4>Add new user:</h4><br />
 
-          <form onSubmit={this.mySubmitHandler}>
+          <form onSubmit={this.mySubmitHandler}> {/* <form id="new-user-form" method="POST" action="/api-admin"> */}
             <p>Email of user:</p>
             <input
-              type='email'
+              type='text'
               name='email'
               onChange={this.myChangeHandler}
             /><br/><br/>
@@ -85,50 +98,19 @@ class Admin extends React.Component {
               onChange={this.myChangeHandler}
             /> Editor <br/><br/><br/>
 
-
             <input type='submit' value="Add this user to system" />
           </form>
 
 
-
-
-          {/*A standard HTML form... apparently you can't quite do it like this...
-            <form action="/node-admin-ops.js" method="get">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email"><br>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password"><br>
-
-            <label for="fName">First name:</label><br>
-            <input type="text" id="fName" name="fName"><br>
-
-            <label for="lName">Last name:</label><br>
-            <input type="text" id="lName" name="lName">
-
-            <label for="isResearcher">User is a Researcher?</label><br>
-            <input type="checkbox" id="isResearcher" name="isResearcher">
-
-            <label for="isReviewer">User is a Reviewer?</label><br>
-            <input type="checkbox" id="isReviewer" name="isReviewer">
-
-            <label for="isEditor">User is a Editor?</label><br>
-            <input type="checkbox" id="isEditor" name="isEditor">
-
-            <input type="submit" value="Submit"/>
-          </form>*/}
-
-        <div id="adminDisplay">
-          <br/>
-          ...This is a work in progress. &nbsp; #dontJudgeMe<br/><br/>
-          <strong>Current state of this container:</strong><br/>
+        <div id="debugDisplay">
+          <div style={{padding: "50px 0 15px"}}><strong>container's current state: &nbsp;(DEBUG)</strong></div>
           {this.state.email}<br/>
           {this.state.password}<br/>
           {this.state.fName}<br/>
           {this.state.lName}<br/>
           {this.state.isResearcher ? "is a researcher" : ""}<br/>
           {this.state.isReviewer  ? "is a reviewer" : ""}<br/>
-          {this.state.isEditor  ? "is an editor" : ""}
+          {this.state.isEditor  ? "is an editor" : ""}<br/>
         </div>
 
       </div>
