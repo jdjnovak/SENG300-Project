@@ -18,19 +18,17 @@ This web-based software will allow researchers to submit journals, view comments
 
 ## Update (April 9, 2020):  running the API for db queries
 
-Fellow dummies (like me):
-
-I'm sure this will be obvious to those with experience, but this was all new to me, so for those who are in the same boat, here is what you will likely have to do to get the Node.js API backend working so that you can query the database. (You have to run this in a separate terminal/command prompt from our React frontend application.)
+This will be obvious to those with experience, but if you're new to this like me, here is what you will likely have to do to get our API back-end working so that you can query our database. (You have to run this in a second, separate terminal/command prompt from our React front-end app.)
 
 Start by cd-ing into the api directory of our project, then run:
 ### `npm install`
 Then, when it has finished installing all the dependencies, run:
 ### `npm start`
-...and our backend should then be running on your machine.
+...and our Node back-end should then be running on your machine.
 
 -Cody
 
-PS: You'll then want to use the following commands (same as before) to run the frontend application:
+PS: You'll then want to use the following commands (same as before) to run the front-end application:
 
 
 
