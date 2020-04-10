@@ -46,7 +46,7 @@ class Admin extends React.Component {
       body: JSON.stringify(this.state)  // convert the state to JSON and send it as the POST body 
     }).then(response => {
         response.text().then(msg => {
-          this.setState({serverResponse: msg});
+          this.setState({serverResponse: JSON.stringify(msg)});
           console.log(msg);
         });
       });
@@ -63,13 +63,13 @@ class Admin extends React.Component {
       body: JSON.stringify({query: myQuery})   
     }).then(response => {
         response.json().then(data => {
-          this.setState({serverResponse: data});  // doesn't seem to like this 
+          this.setState({serverResponse: JSON.parse(JSON.stringify(data))});
           console.log(data);
         });
       });
 
-    event.preventDefault();
-    this.resetState(false);
+    if (typeof event !== 'undefined') event.preventDefault();
+    if (typeof event !== 'undefined')this.resetState(false);
   }
 
 
@@ -93,11 +93,11 @@ class Admin extends React.Component {
   render() {
     return (
       <div id="renderContainer">
-        <div id="adminMenu" style={{textAlign: "right", margin: "120px 100px 0 0", float: "left", height: "100vh", width: "190px"}}>
+        <div id="adminMenu" style={{textAlign: "right", margin: "120px 80px 0 0", float: "left", height: "100vh", width: "200px"}}>
           <button onClick={ (ev) => this.changeFunction(0, ev) }>View / Edit Users</button><br/><br/>
           <button onClick={ (ev) => this.changeFunction(1, ev) }>Add New User</button><br/><br/>
         </div>
-        <div id="adminContainer" style={{margin: "60px auto 0", width: "420px"}}>
+        <div id="adminContainer" style={{float: "left", margin: "60px 0 0", width: "calc(100vw - 400px)"}}>
           <h1>Admin Control Panel</h1><br />
           
           {this.showFunction()}
@@ -117,13 +117,48 @@ class ViewEditUser extends Admin {
     this.state = props.value;
   }
 
+
+  selectQuery = (myQuery) => {
+    // static var prevents this func from infinite call looop (it refreshes the state AND is called in render())
+    if (typeof this.selectQuery.hasRun == 'undefined' || !this.selectQuery.hasRun) { 
+      this.selectQuery.hasRun = true;  // flag set (static var)
+      this.mySubmitHandler_SELECT(myQuery)  // from Admin, just reusing the event handler
+    }
+  }
+
+  componentWillUnmount() {
+    this.selectQuery.hasRun = false;  // not needed, but just to make sure
+  }
+
+  printUsers() {
+    this.selectQuery("SELECT fName, lName, email FROM USERS");
+    if (this.state.serverResponse !== "") {
+      let users = this.state.serverResponse;
+      const size = users.length;
+      let tableRows = [];
+
+      for (let i = 0; i < size; i++) 
+        tableRows.push(<tr key={"row"+i}><td> &nbsp; {users[i].fName} &nbsp; </td><td> &nbsp; {users[i].lName} &nbsp; </td><td> &nbsp; {users[i].email} &nbsp; </td></tr>);
+
+      return tableRows;
+    } 
+  }
+
+
   render() {
     return(
       <div id="topLevelContainer0">
         <h4>View / Edit / Remove user:</h4><br /><br />
-        <p><em>this will be implemented Friday</em></p>
-          
-      </div>
+        <h5>Select a user: (work in progress)</h5><br/>
+        <table border='1'>
+          <tbody>
+            <tr><td><strong> &nbsp; First Name  &nbsp; </strong></td><td><strong> &nbsp; Last Name &nbsp; </strong></td><td><strong> &nbsp; email &nbsp; </strong></td></tr>
+            {this.printUsers()}
+          </tbody>
+        </table>
+
+
+      </div> // #topLevelContainer0
     );
   }
 }
@@ -203,7 +238,7 @@ class AddUser extends Admin {
               <div style={{padding: "50px 0 15px"}}>
                 <strong>{this.state.serverResponse === "" ? "" : "Server response: (DEBUG)"}</strong>
               </div>
-              {JSON.stringify(this.state.serverResponse)}<br/><br/><br/>
+              {this.state.serverResponse}<br/><br/><br/>
               <strong>container's current state: &nbsp;(DEBUG)</strong>
             </div>
             {this.state.email}<br/>
@@ -224,7 +259,6 @@ class AddUser extends Admin {
     );
   }
 }
-
 
 
 
