@@ -1,7 +1,8 @@
 import React from 'react';
 
 
-class Admin extends React.Component {  
+
+class Admin extends React.Component { 
 
   constructor(props) {
     super(props);
@@ -12,23 +13,20 @@ class Admin extends React.Component {
       lName: '',
       isResearcher: false, 
       isReviewer: false, 
-      isEditor: false
+      isEditor: false,
+      serverResponse: ""
     };
   }
 
-
-
-  callAPI = () => {  
-    const options = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(this.state)  // convert the state to JSON and send it as the POST body    
-    };
-    fetch('http://localhost:9000/adminAPI', options)
-      .then((response) => response.text())
-      .then((responseTEXT) => {
-        alert(responseTEXT);
-      });
+  resetState = (inclServResponse) => {
+    this.setState({email: ""});
+    this.setState({password: ""});
+    this.setState({fName: ""});
+    this.setState({lName: ""});
+    this.setState({isResearcher: false});
+    this.setState({isReviewer: false});
+    this.setState({isEditor: false});
+    if (inclServResponse) this.setState({serverResponse: ""});
   }
 
   myChangeHandler = (event) => {
@@ -38,10 +36,39 @@ class Admin extends React.Component {
     // need to handle the checkboxes differently
   }
 
-  mySubmitHandler = (event) => {
-    this.callAPI();
+  mySubmitHandler_INSERT = (event) => {
+    fetch('http://localhost:9000/adminAPI', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(this.state)  // convert the state to JSON and send it as the POST body 
+    }).then(response => {
+        response.text().then(msg => {
+          this.setState({serverResponse: msg});
+          console.log(msg);
+        });
+      });
+
+    event.preventDefault();
+    this.resetState(false);
   }
 
+  mySubmitHandler_SELECT = (myQuery, event) => {  // use this to perform SELECT query on our db
+    fetch('http://localhost:9000/select', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({query: myQuery})   
+    }).then(response => {
+        response.json().then(data => {
+          this.setState({serverResponse: data});  // doesn't seem to like this 
+          this.dbData = data;
+          console.log(data);
+          console.log(this.dbData[0].fName);
+        });
+      });
+
+    event.preventDefault();
+    this.resetState(false);
+  }
 
 
   render() {
@@ -50,11 +77,12 @@ class Admin extends React.Component {
         <h1>Admin Control Panel</h1><br />
         <h4>Add new user:</h4><br />
 
-          <form onSubmit={this.mySubmitHandler}> {/* <form id="new-user-form" method="POST" action="/api-admin"> */}
+          <form onSubmit={this.mySubmitHandler_INSERT}> {/* <form id="new-user-form" method="POST" action="/api-admin"> */}
             <p>Email of user:</p>
             <input
-              type='text'
+              type='email'
               name='email'
+              value={this.state.email}
               onChange={this.myChangeHandler}
             /><br/><br/>
 
@@ -62,6 +90,7 @@ class Admin extends React.Component {
             <input
               type='password'
               name='password'
+              value={this.state.password}
               onChange={this.myChangeHandler}
             /><br/><br/>
             
@@ -69,6 +98,7 @@ class Admin extends React.Component {
             <input
               type='text'
               name='fName'
+              value={this.state.fName}
               onChange={this.myChangeHandler}
             /><br/><br/>
             
@@ -76,6 +106,7 @@ class Admin extends React.Component {
             <input
               type='text'
               name='lName'
+              value={this.state.lName}
               onChange={this.myChangeHandler}
             /><br/><br/>
             
@@ -83,18 +114,21 @@ class Admin extends React.Component {
             <input
               type='checkbox'
               name='isResearcher'
+              checked={this.state.isResearcher}
               onChange={this.myChangeHandler}
             /> Researcher<br />
 
             <input
               type='checkbox'
               name='isReviewer'
+              checked={this.state.isReviewer}
               onChange={this.myChangeHandler}
             /> Reviewer<br />
 
             <input
               type='checkbox'
               name='isEditor'
+              checked={this.state.isEditor}
               onChange={this.myChangeHandler}
             /> Editor <br/><br/><br/>
 
@@ -103,14 +137,26 @@ class Admin extends React.Component {
 
 
         <div id="debugDisplay">
-          <div style={{padding: "50px 0 15px"}}><strong>container's current state: &nbsp;(DEBUG)</strong></div>
+          <div style={{padding: "0 0 15px"}}>
+            <div style={{padding: "50px 0 15px"}}>
+              <strong>{this.state.serverResponse === "" ? "" : "Server response: (DEBUG)"}</strong>
+            </div>
+            {JSON.stringify(this.state.serverResponse)}<br/><br/><br/>
+            <strong>container's current state: &nbsp;(DEBUG)</strong>
+          </div>
           {this.state.email}<br/>
           {this.state.password}<br/>
           {this.state.fName}<br/>
           {this.state.lName}<br/>
           {this.state.isResearcher ? "is a researcher" : ""}<br/>
           {this.state.isReviewer  ? "is a reviewer" : ""}<br/>
-          {this.state.isEditor  ? "is an editor" : ""}<br/>
+          {this.state.isEditor  ? "is an editor" : ""}<br/><br/>
+        </div>
+
+        <div style={{padding: "0 0 100px"}}>
+          <form onSubmit={ (event) => this.mySubmitHandler_SELECT("SELECT fName FROM USERS", event)}>
+            <input type='submit' value="Test query" />
+          </form>
         </div>
 
       </div>

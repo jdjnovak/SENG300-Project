@@ -5,6 +5,7 @@ var express = require("express");
 var mysql = require('mysql');
 var router = express.Router();
 
+// might have to change this when adding to this file... does this make router interpret everything as a JSON??...
 router.use(express.json({ limit: '1mb' }));  // (basic) to ensure no insane loading of the db
 
 var pool = mysql.createPool({  // using a pool so can handle multiple queries over time
@@ -14,7 +15,7 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
   user: process.env.USER,
   password: process.env.PW,
   debug:  false
-});
+});  // contact Cody for these details if stuck
 
 
 
@@ -43,6 +44,7 @@ router.post('/', (req, res) => {
 
   res.send("New user added to USERS table");  // response back to client. min: response.end();
 });
+
 
 
 
