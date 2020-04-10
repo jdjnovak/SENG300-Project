@@ -38,7 +38,7 @@ router.post('/select', (req, res) => {  // use this one for your select queries
     }
     console.log("Result of query \"" + getQuery + "\":");
     console.log(JSON.parse(JSON.stringify(results)));
-    res.send(JSON.stringify(results));     
+    res.send(results);     
   });
 })
 
