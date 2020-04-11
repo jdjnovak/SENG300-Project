@@ -15,7 +15,7 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
   database: process.env.DB,
   user: process.env.USER,
   password: process.env.PW,
-  debug:  false
+  debug: false
 });  // contact Cody for these details if stuck
 
 
@@ -28,17 +28,45 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
 
 
 
-router.post('/select', (req, res) => {  // use this one for your select queries
+
+// use this one for DELETE queries
+// it's not parameterized (unsafe), but should be fine for how we'll use it
+
+router.post('/delete', (req, res) => {  
   let getQuery = req.body.query;
-  pool.query(getQuery, (err, results) => {
+  pool.query(getQuery, (err, response) => {
+    console.log("Connected to database...\n");
+    if(err) {
+      console.error(err);
+      return;
+    }
+    console.log("Entry removed from table");
+    res.send("Entry removed from table");     
+  });
+})
+
+router.get("/delete", function(req, res, next){
+  res.send("API for DELETE queries is working properly");
+});
+
+
+
+
+
+// use this one for SELECT queries
+// it's not parameterized (unsafe), but should be fine for how we'll use it
+
+router.post('/select', (req, res) => {  
+  let getQuery = req.body.query;
+  pool.query(getQuery, (err, response) => {
     console.log("Connected to database...\n");
     if(err) {
       console.error(err);
       return;
     }
     console.log("Result of query \"" + getQuery + "\":");
-    console.log(JSON.parse(JSON.stringify(results)));
-    res.send(results);     
+    console.log(JSON.parse(JSON.stringify(response)));
+    res.send(response);     
   });
 })
 
@@ -46,11 +74,14 @@ router.get("/select", function(req, res, next){
   res.send("API for SELECT queries is working properly");
 });
 
+
+
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'API is up and running on port 9000!' });
 });
-
 
 
 module.exports = router;
