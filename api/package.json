@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.6.5",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -16,6 +17,7 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "node-fetch": "^2.6.0",
     "node-datetime": "^2.1.2"
   }
 }
