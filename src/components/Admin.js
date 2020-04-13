@@ -97,7 +97,7 @@ class Admin extends React.Component {
     let val = (name === 'isResearcher' || name === 'isReviewer' || name === 'isEditor') ? event.target.checked : event.target.value;
     this.setState({[name]: val});
     if (this.state.serverResponse !== "")
-    this.setState({serverResponse: ""});
+      this.setState({serverResponse: ""});
   }
 
 
@@ -121,7 +121,7 @@ class Admin extends React.Component {
   render() {
     return (
       <div id="renderContainer">
-        <div id="adminMenu" style={{textAlign: "right", margin: "120px 80px 0 0", float: "left", height: "100vh", width: "200px"}}>
+        <div id="adminMenu" style={{textAlign: "right", margin: "120px 80px 0 0", float: "left", height: "300px", width: "200px"}}>
           <button onClick={ (ev) => this.changeFunction(1, this.state.activeFunction, ev) }>View / Edit Users</button><br/><br/>
           <button onClick={ (ev) => this.changeFunction(2, this.state.activeFunction, ev) }>Add New User</button><br/><br/>
         </div>

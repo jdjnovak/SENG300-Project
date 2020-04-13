@@ -1,6 +1,4 @@
 // a basic API for the admin functions of our program
-const auth0Web = require("@auth0/auth0-spa-js");
-
 require('dotenv').config();
 var express = require("express");
 var mysql = require('mysql');
@@ -10,7 +8,6 @@ var fetch = require("node-fetch");
 // might have to change this when adding to this file... does this make router interpret everything as a JSON??...
 router.use(express.json({ limit: '1mb' }));  // (basic) to ensure no insane loading of the db
 
-/*
 var pool = mysql.createPool({  // using a pool so can handle multiple queries over time
   connectionLimit : process.env.LIMIT,  // important
   host: process.env.HOST,
@@ -19,18 +16,6 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
   password: process.env.PW,
   debug: false
 });  // contact Cody for these details if stuck
-*/
-var pool = mysql.createPool({
-  connectionLimit: 100,
-  host: "192.254.236.194",
-  database: "tyraelh_300_journal_system",
-  user: "tyraelh_300_user",
-  password: "seNg!300@S.t()rM!Ng",
-  debug: false
-});
-
-let auth0 = null;
-
 
 
 
@@ -113,10 +98,6 @@ router.post('/insert', (req, res) => {
 
   res.send("New user added");  // response back to client. min: response.end();
 });
-
-
-
-
 
 
 router.get("/", function(req, res, next) {
