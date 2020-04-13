@@ -12,6 +12,7 @@ import Home from './components/Home.js';
 import Upload from './components/Upload.js';
 import NotFound from './components/NotFound.js';
 import Admin from './components/Admin.js';
+import Comments from './components/comments.js';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -40,6 +41,7 @@ function App() {
                 <Nav.Link href="/admin">Admin</Nav.Link>
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/upload">Upload</Nav.Link>
+				<Nav.Link href="/comments">Comments</Nav.Link>
               </Nav>
             </Navbar.Collapse>
 
@@ -57,6 +59,7 @@ function App() {
                 <Route path="/admin" component={Admin} />
                 <Route exact path="/" component={Home} />
                 <Route path="/upload" component={(props) => <Upload {...props} userName={user.email} />} />
+				<Route path ="/comments" component={Comments}/>
                 <Route component={NotFound} />
               </Switch>
             </div>
