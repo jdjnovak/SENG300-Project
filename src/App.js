@@ -12,7 +12,6 @@ import { Auth0Context } from './contexts/auth0-context';
 import Home from './components/Home.js';
 import Upload from './components/Upload.js';
 import NotFound from './components/NotFound.js';
-import LoginWindow from './components/Login.js';
 import Admin from './components/Admin.js';
 
 import Nav from 'react-bootstrap/Nav';
@@ -48,12 +47,12 @@ function App() {
               </Nav>
             </Navbar.Collapse>
 
-            <LoginWindow />
-            <button
+            <h4 id="currentUserEmail" className="pr-3">{user.email}</h4>
+            <Button
               onClick={() => logout({ returnTo: window.location.origin })}
               className="">
               Logout
-        </button>
+            </Button>
 
           </Navbar>
           <Router>
@@ -69,25 +68,27 @@ function App() {
         </>
       )
       }
-      {!isLoading && !user && (
-        <div className="h-50 w-100 text-center p-5">
-          <Image
-            src={require('./assets/uw-logo-black-text.png')}
-            alt="University of Winnipeg Logo"
-            fluid
-          />
-          <br />
-          <br />
-          <h1>Journal Submission Application</h1>
-          <br />
-          <br />
-          <h4>Please log in to access the application.</h4>
-          <Button onClick={loginWithRedirect} size="lg" className="ml-auto mr-auto">
-            Login
+      {
+        !isLoading && !user && (
+          <div className="h-50 w-100 text-center p-5">
+            <Image
+              src={require('./assets/uw-logo-black-text.png')}
+              alt="University of Winnipeg Logo"
+              fluid
+            />
+            <br />
+            <br />
+            <h1>Journal Submission Application</h1>
+            <br />
+            <br />
+            <h4>Please log in to access the application.</h4>
+            <Button onClick={loginWithRedirect} size="lg" className="ml-auto mr-auto">
+              Login
           </Button>
-        </div>
-      )}
-    </div>
+          </div>
+        )
+      }
+    </div >
   );
 }
 
