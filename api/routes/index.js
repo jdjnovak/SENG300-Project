@@ -9,14 +9,24 @@ var router = express.Router();
 // might have to change this if sending files through here... not sure.
 router.use(express.json({ limit: '1mb' }));  // (basic) to ensure no insane loading of the db
 
+/*
 var pool = mysql.createPool({  // using a pool so can handle multiple queries over time
-  connectionLimit : process.env.LIMIT,  // important
+  connectionLimit: process.env.LIMIT,  // important
   host: process.env.HOST,
   database: process.env.DB,
   user: process.env.USER,
   password: process.env.PW,
   debug: false
 });  // contact Cody for these details if stuck
+*/
+var pool = mysql.createPool({
+  connectionLimit: 100,
+  host: "192.254.236.194",
+  database: "tyraelh_300_journal_system",
+  user: "tyraelh_300_user",
+  password: "seNg!300@S.t()rM!Ng",
+  debug: false
+});
 
 
 
@@ -32,20 +42,20 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
 // use this one for DELETE queries
 // it's not parameterized (unsafe), but should be fine for how we'll use it
 
-router.post('/delete', (req, res) => {  
+router.post('/delete', (req, res) => {
   let getQuery = req.body.query;
   pool.query(getQuery, (err, response) => {
     console.log("Connected to database...\n");
-    if(err) {
+    if (err) {
       console.error(err);
       return;
     }
     console.log("Entry removed from table");
-    res.send("Entry removed from table");     
+    res.send("Entry removed from table");
   });
 })
 
-router.get("/delete", function(req, res, next){
+router.get("/delete", function(req, res, next) {
   res.send("API for DELETE queries is working properly");
 });
 
@@ -56,21 +66,21 @@ router.get("/delete", function(req, res, next){
 // use this one for SELECT queries
 // it's not parameterized (unsafe), but should be fine for how we'll use it
 
-router.post('/select', (req, res) => {  
+router.post('/select', (req, res) => {
   let getQuery = req.body.query;
   pool.query(getQuery, (err, response) => {
     console.log("Connected to database...\n");
-    if(err) {
+    if (err) {
       console.error(err);
       return;
     }
     console.log("Result of query \"" + getQuery + "\":");
     console.log(JSON.parse(JSON.stringify(response)));
-    res.send(response);     
+    res.send(response);
   });
 })
 
-router.get("/select", function(req, res, next){
+router.get("/select", function(req, res, next) {
   res.send("API for SELECT queries is working properly");
 });
 
