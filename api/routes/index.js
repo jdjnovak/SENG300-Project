@@ -5,7 +5,7 @@ require('dotenv').config();
 var express = require("express");
 var mysql = require('mysql');
 var router = express.Router();
-var dateObject = require('node-datetime')
+var dateObject = require('node-datetime');
 
 // might have to change this if sending files through here... not sure.
 router.use(express.json({ limit: '1mb' }));  // (basic) to ensure no insane loading of the db
@@ -13,9 +13,9 @@ router.use(express.json({ limit: '1mb' }));  // (basic) to ensure no insane load
 var pool = mysql.createPool({  // using a pool so can handle multiple queries over time
   connectionLimit: process.env.LIMIT,  // important
   host: process.env.HOST,
-  database: process.env.DB,
-  user: process.env.USER,
-  password: process.env.PW,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PW,
   debug: false
 });  // contact Cody for these details if stuck
 
@@ -73,30 +73,30 @@ router.get("/select", function(req, res, next) {
 // used for INSERT queries, specifically for SUBMISSIONS. 
 // It's parameterized (safe), since it's using user-input form data,
 
-router.post('/insert-submission', (req, res) => {  
+router.post('/insert-submission', (req, res) => {
   var date = dateObject.create();
   var dateFormatted = date.format('Y-m-d');
   console.log(dateFormatted);
   let sub = req.body;
   let insertQuery = "INSERT INTO SUBMISSION VALUES (?,?,?,?,?,?,?,?,?)";
-  let params = [ "DEFAULT", sub.fileURL, sub.title, sub.description, dateFormatted, 
-                 sub.author, sub.revParentID, sub.revDeadline, sub.status  ];
+  let params = ["DEFAULT", sub.fileURL, sub.title, sub.description, dateFormatted,
+    sub.author, sub.revParentID, sub.revDeadline, sub.status];
   let preparedQuery = mysql.format(insertQuery, params);
 
   console.log(preparedQuery);
   pool.query(preparedQuery, (err, response) => {
     console.log("Connected to database...\n");
-    if(err) {
+    if (err) {
       console.error(err);
       return;
     }
     console.log("article submission added to SUBMISSION table!");
-    console.log(response.insertId); 
-    res.send("Submission received by the server");     
+    console.log(response.insertId);
+    res.send("Submission received by the server");
   });
 });
 
-router.get("/insert-submission", function(req, res, next){
+router.get("/insert-submission", function(req, res, next) {
   res.send("API for INSERT (submission) queries is working properly");
 });
 

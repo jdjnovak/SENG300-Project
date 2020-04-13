@@ -8,12 +8,14 @@ var fetch = require("node-fetch");
 // might have to change this when adding to this file... does this make router interpret everything as a JSON??...
 router.use(express.json({ limit: '1mb' }));  // (basic) to ensure no insane loading of the db
 
+console.log(process.env.HOST);
+
 var pool = mysql.createPool({  // using a pool so can handle multiple queries over time
-  connectionLimit : process.env.LIMIT,  // important
+  connectionLimit: process.env.LIMIT,  // important
   host: process.env.HOST,
-  database: process.env.DB,
-  user: process.env.USER,
-  password: process.env.PW,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PW,
   debug: false
 });  // contact Cody for these details if stuck
 

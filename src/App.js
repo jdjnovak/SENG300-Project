@@ -7,7 +7,6 @@ import {
 import './App.css';
 
 import { Auth0Context } from './contexts/auth0-context';
-//import Auth from './components/Auth';
 
 import Home from './components/Home.js';
 import Upload from './components/Upload.js';
@@ -19,9 +18,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 
-//const auth = new Auth();
-//const UserContext = React.createContext();
-
 function App() {
   const { isLoading, user, loginWithRedirect, logout } = useContext(Auth0Context);
 
@@ -29,10 +25,10 @@ function App() {
     <div className="App">
       {!isLoading && user && (
         <>
-          <Navbar bg="light" variant="light" expand="lg">
+          <Navbar bg="dark" variant="dark" expand="lg">
             <Navbar.Brand href="/">
               <Image
-                src={require('./assets/uw-logo-black-text.png')}
+                src={require('./assets/uw-logo-white-text.png')}
                 height={60}
                 alt="University of Winnipeg Logo"
               />
@@ -47,7 +43,7 @@ function App() {
               </Nav>
             </Navbar.Collapse>
 
-            <h4 id="currentUserEmail" className="pr-3">{user.email}</h4>
+            <h4 id="currentUserEmail" className="pr-3 text-light">{user.email}</h4>
             <Button
               onClick={() => logout({ returnTo: window.location.origin })}
               className="">
@@ -60,7 +56,7 @@ function App() {
               <Switch>
                 <Route path="/admin" component={Admin} />
                 <Route exact path="/" component={Home} />
-                <Route path="/upload" component={Upload} />
+                <Route path="/upload" component={(props) => <Upload {...props} userName={user.email} />} />
                 <Route component={NotFound} />
               </Switch>
             </div>
@@ -70,7 +66,7 @@ function App() {
       }
       {
         !isLoading && !user && (
-          <div className="h-50 w-100 text-center p-5">
+          <div className="h-100 w-100 text-center p-5">
             <Image
               src={require('./assets/uw-logo-black-text.png')}
               alt="University of Winnipeg Logo"
@@ -84,7 +80,7 @@ function App() {
             <h4>Please log in to access the application.</h4>
             <Button onClick={loginWithRedirect} size="lg" className="ml-auto mr-auto">
               Login
-          </Button>
+            </Button>
           </div>
         )
       }
