@@ -1,3 +1,4 @@
+
 # SENG300 - Project - Group 14
 ---
 ## About  
@@ -15,7 +16,21 @@ This web-based software will allow researchers to submit journals, view comments
 
 ---
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Update (April 9, 2020):  running the API for db queries
+
+This will be obvious to those with experience, but if you're new to this like me, here is what you will likely have to do to get our API back-end working so that you can query our database. (You have to run this in a second, separate terminal/command prompt from our React front-end app.)
+
+Start by cd-ing into the api directory of our project, then run:
+### `npm install`
+Then, when it has finished installing all the dependencies, run:
+### `npm start`
+...and our Node back-end should then be running on your machine.
+
+-Cody
+
+PS: You'll then want to use the following commands (same as before) to run the front-end application:
+
+
 
 ## Available Scripts
 
@@ -53,6 +68,13 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+</br>
+</br>
+</br>
+***** This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).  ******
+</br>
+</br>
+</br>
 
 ## Learn More
 
