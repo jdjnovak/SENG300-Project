@@ -15,7 +15,7 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
   user: process.env.USER,
   password: process.env.PW,
   debug: false
-});  // contact Cody for these details if stuck
+});
 
 
 
@@ -51,9 +51,9 @@ router.get("/update", function(req, res, next){
 
 
 function addUser(user) {
-    let insertQuery = "INSERT INTO ?? VALUES (?,?,?,?,?,?,?)";
-    let params = [ "USERS",   user.email, user.password, user.fName, user.lName, 
-                              user.isResearcher, user.isReviewer, user.isEditor  ];
+    let insertQuery = "INSERT INTO USERS VALUES (?,?,?,?,?,?,?)";
+    let params = [ user.email, user.password, user.fName, user.lName, 
+                   user.isResearcher, user.isReviewer, user.isEditor  ];
     let preparedQuery = mysql.format(insertQuery, params);
     pool.query(preparedQuery, (err, response) => {
       console.log("Connected to database...\n");
