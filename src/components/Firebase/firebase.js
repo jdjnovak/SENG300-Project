@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/storage'
+
 require('dotenv').config();
 
   // Initialize Firebase
@@ -12,6 +13,8 @@ require('dotenv').config();
     messagingSenderId: "209896766188",
     appId: "1:209896766188:web:92169630f8de9a315643c9",
     measurementId: "G-C7080H2SY2"
+
+    // can't get this to work:
 
     // apiKey: process.env.APIKEY,
     // authDomain: process.env.AUTHDOM,

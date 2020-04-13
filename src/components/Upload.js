@@ -7,8 +7,6 @@ import storage  from './Firebase/firebase.js'
 
 
 
-// test
-
 
 class UploadTest extends React.Component {
 
