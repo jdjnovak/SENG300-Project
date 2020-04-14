@@ -5,6 +5,7 @@ import '../App.css';
 // import from config file
 import storage from './Firebase/firebase.js';
 
+
 class Upload extends Component {
 
   constructor(props) {
@@ -29,6 +30,9 @@ class Upload extends Component {
       nomitatedRev1: null,
       nomitatedRev2: null,
       nomitatedRev3: null,
+      nomitatedRev4: null,
+
+      topics: "",
 
       sideLabel: "",
       btnLabel: " Select file...",
@@ -57,6 +61,7 @@ class Upload extends Component {
       }).then(response => {
         response.json().then(data => {
           this.setState({ serverResponse: JSON.parse(JSON.stringify(data)) });
+          console.log("Here's the raw server response: \n");
           console.log(data);
         });
       });
@@ -68,12 +73,12 @@ class Upload extends Component {
 
   printReviewersAsOptions() {
     this.performSelectQuery("SELECT email, fName, lName FROM USERS WHERE isReviewer = true AND email <> '"
-      + this.state.author + "'");
+                            + this.state.author + "'");
 
     let users = this.state.serverResponse;
     const size = users.length;
     let optionRows = [];
-    optionRows.push(<option key={"selectMsg"} value={'selectMsg'} disabled> &nbsp; &nbsp;- select reviewer -&nbsp; &nbsp; </option>);
+    optionRows.push(<option key={"selectMsg"} value={'selectMsg'} disabled> &nbsp; - select reviewer -&nbsp; &nbsp; </option>);
     optionRows.push(<option key={"blankLine"} value={'blankLine'} disabled></option>);
 
     for (let i = 0; i < size; i++)
@@ -88,7 +93,6 @@ class Upload extends Component {
     this.setState({ title: "" });
     this.setState({ description: "" });
     this.setState({ subDate: null });
-    this.setState({ author: "" }); // FIX: should use logged-in user's email, not this
     this.setState({ revParentID: null });
     this.setState({ revDeadline: null });
     this.setState({ status: "Awaiting editor review" });
@@ -96,6 +100,10 @@ class Upload extends Component {
     this.setState({ nomitatedRev1: null });
     this.setState({ nomitatedRev2: null });
     this.setState({ nomitatedRev3: null });
+    this.setState({ nomitatedRev4: null });
+
+    this.setState({topics: ""});
+
     this.queryNeeded = true;
   }
 
@@ -107,7 +115,7 @@ class Upload extends Component {
       .getDownloadURL()
       .then((fileURL) => {
         this.setState({ fileURL });
-        this.nowSendIt(); // fml. Took so long to figure out this solution (order is important with all this async crap).
+        this.nowSendItToDB(); // fml. Took so long to figure out this solution (order is important with all this async crap).
       });
   }
 
@@ -133,28 +141,84 @@ class Upload extends Component {
         this.setState({ fileURL: this.getDLurl(fileobj.name), done: true, uploading: false, success: true, sideLabel: "File uploaded" });
       }
     );
-
     event.preventDefault();
   }
 
-  nowSendIt = () => {
-    console.log("This is the URL right before sending it: \n" + this.state.fileURL + "\n\n");
-    // submit everything to our db
+
+  nowSendItToDB = () => {
+    // have to chain some callbacks because this all happens asynchronously
+    // and each successive piece depends on data from the previous piece,
+    // so we need to make them wait before proceeding:
+
+    // Start by storing the submission entry in our db
     fetch('http://localhost:9000/insert-submission', {  // this will need to be parameterized in the API
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(this.state)  // convert the state to JSON and send it as the POST body 
     }).then(response => {
-      response.text().then(msg => {
-        this.setState({ serverResponse: JSON.stringify(msg) });
-        console.log(msg);
-      });
-    });
+        response.text().then(msg => {
+          this.setState({serverResponse: JSON.stringify(msg)});
+          console.log("Here's the insert-submission response: \n");
+          console.log(msg);
 
-    // and finally:
-    this.resetSubmission();
+
+          // next, find what auto-generated subID the submission was given by the db
+          let myQuery = "SELECT subID FROM SUBMISSION WHERE fileURL = '" + this.state.fileURL + 
+                        "' AND title = '" + this.state.title + "' AND description = '" +
+                        this.state.description + "'";
+          fetch('http://localhost:9000/select', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({query: myQuery})   
+          }).then(response => {
+            response.json().then(data => {
+              this.setState({serverResponse: JSON.parse(JSON.stringify(data))});
+              console.log("Here's the raw server response: \n");
+              console.log(data);
+
+
+              // now, use that subID to submit the nominations to the NOMINATED table
+              const subIDForThisSubmission = this.state.serverResponse[0].subID; console.log("\nsubID: " + subIDForThisSubmission + "\n\n");
+              fetch('http://localhost:9000/insert-nominated-reviewers', {  // this will need to be parameterized in the API
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                subID: subIDForThisSubmission,
+                reviewer: [ this.state.nomitatedRev1, this.state.nomitatedRev2, 
+                            this.state.nomitatedRev3, this.state.nomitatedRev4 ]
+              })  // convert the state to JSON and send it as the POST body 
+              }).then(response => {
+                response.text().then(msg => {
+                  this.setState({serverResponse: JSON.stringify(msg)});
+                  console.log(msg);
+
+
+                  // now add the topic tags to that table
+                  fetch('http://localhost:9000/insert-topics', {  // this will need to be parameterized in the API
+                  method: 'POST',
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({
+                    subID: subIDForThisSubmission,
+                    topics: this.state.topics
+                  })  // convert the state to JSON and send it as the POST body 
+                  }).then(response => {
+                    response.text().then(msg => {
+                      this.setState({serverResponse: JSON.stringify(msg)});
+                      console.log(msg);
+
+                      // and finally, clear the form fields
+                      this.resetSubmission(); 
+                    }); //inersert-topics
+                  });
+
+                }); //insert-nominated-reviewers
+              });
+
+            }); //select
+          });
+          
+        }); //insert-submission
+      });
   }
 
 
@@ -197,6 +261,18 @@ class Upload extends Component {
             onChange={this.myChangeHandler}
           />
 
+          <br/>
+          <br/>
+
+          <h5>Enter a few comma-separated tags that describe this work:</h5>
+          <input
+            type='text'
+            name='topics'
+            value={this.state.topics}
+            maxLength = {200}
+            onChange={this.myChangeHandler}
+          />
+
           <br />
           <br />
 
@@ -213,43 +289,54 @@ class Upload extends Component {
           <br />
           <br />
 
-          <div style={{ margin: '10px 0' }}><h5>Nominate up to 3 reviewers to assess this work: &nbsp; (optional)</h5></div>
-          <select
-            type='email'
-            name='nomitatedRev1'
-            defaultValue='selectMsg'
-            onChange={this.myChangeHandler}
-          >
+          <div style={{margin: '10px 0'}}><h5>Nominate up to 4 reviewers to assess this work: &nbsp; (optional)</h5></div>
+            <select
+              type='email'
+              name='nomitatedRev1'
+              defaultValue='selectMsg'
+              onChange={this.myChangeHandler}
+            > 
             {this.printReviewersAsOptions()}
-          </select>
+            </select>
 
-          &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp;
 
-          <select
-            type='email'
-            name='nomitatedRev2'
-            defaultValue='selectMsg'
-            onChange={this.myChangeHandler}
-          >
+            <select
+              type='email'
+              name='nomitatedRev2'
+              defaultValue='selectMsg'
+              onChange={this.myChangeHandler}
+            > 
             {this.printReviewersAsOptions()}
-          </select>
+            </select>
 
-          &nbsp; &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp;
 
-          <select
-            type='email'
-            name='nomitatedRev3'
-            defaultValue='selectMsg'
-            onChange={this.myChangeHandler}
-          >
+            <select
+              type='email'
+              name='nomitatedRev3'
+              defaultValue='selectMsg'
+              onChange={this.myChangeHandler}
+            > 
             {this.printReviewersAsOptions()}
-          </select>
+            </select>
 
-          <br />
-          <br />
-          <br />
+            &nbsp; &nbsp; &nbsp;
 
-          <input type='submit' value="Submit article" />
+            <select
+              type='email'
+              name='nomitatedRev4'
+              defaultValue='selectMsg'
+              onChange={this.myChangeHandler}
+            > 
+            {this.printReviewersAsOptions()}
+            </select>
+            
+            <br/>
+            <br/>
+            <br/>
+
+            <input type='submit' value="Submit work" />
         </form>
       </div>
     );

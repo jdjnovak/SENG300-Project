@@ -32,7 +32,7 @@ router.post('/update', (req, res) => {
   user.isResearcher, user.isReviewer, user.isEditor, user.originalEmail];
   let preparedQuery = mysql.format(updateQuery, params);
   pool.query(preparedQuery, (err, response) => {
-    console.log("Connected to database...\n");
+    console.log("Connecting to database...\n");
     if (err) {
       console.error(err);
       return;
@@ -45,6 +45,8 @@ router.post('/update', (req, res) => {
 router.get("/update", function(req, res, next) {
   res.send("API for admin UPDATE queries is working properly");
 });
+
+
 
 
 function sketchyPostSignup(user) {
@@ -74,13 +76,16 @@ function sketchyPostSignup(user) {
 
 }
 
+
+
+
 function addUser(user) {
   let insertQuery = "INSERT INTO ?? VALUES (?,?,?,?,?,?,?)";
   let params = ["USERS", user.email, user.password, user.fName, user.lName,
     user.isResearcher, user.isReviewer, user.isEditor];
   let preparedQuery = mysql.format(insertQuery, params);
   pool.query(preparedQuery, (err, response) => {
-    console.log("Connected to database...\n");
+    console.log("Connecting to database...\n");
     if (err) {
       console.error(err);
       return;
@@ -100,6 +105,9 @@ router.post('/insert', (req, res) => {
 
   res.send("New user added");  // response back to client. min: response.end();
 });
+
+
+
 
 
 router.get("/", function(req, res, next) {

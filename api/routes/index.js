@@ -19,17 +19,27 @@ var pool = mysql.createPool({  // using a pool so can handle multiple queries ov
   debug: false
 });  // contact Cody for these details if stuck
 
+
+
+
+
+
 // add your API stuff here if you like :)
 
 
-// use this one for DELETE queries.
 
+
+
+
+
+
+// use this one for DELETE queries.
 // it's not parameterized (unsafe), but should be fine for how we'll use it
 
 router.post('/delete', (req, res) => {
   let getQuery = req.body.query;
   pool.query(getQuery, (err, response) => {
-    console.log("Connected to database...\n");
+    console.log("Connecting to database...\n");
     if (err) {
       console.error(err);
       return;
@@ -52,8 +62,9 @@ router.get("/delete", function(req, res, next) {
 
 router.post('/select', (req, res) => {
   let getQuery = req.body.query;
+  console.log("Query string received from client:\n" + getQuery);
   pool.query(getQuery, (err, response) => {
-    console.log("Connected to database...\n");
+    console.log("Connecting to database...\n");
     if (err) {
       console.error(err);
       return;
@@ -67,6 +78,76 @@ router.post('/select', (req, res) => {
 router.get("/select", function(req, res, next) {
   res.send("API for SELECT queries is working properly");
 });
+
+
+
+
+
+// used for INSERT queries on the TOPICS table. 
+
+router.post('/insert-topics', (req, res) => {  
+  const topicData = req.body;
+  let topic = topicData.topics.split(",");
+  const numTopics = topic.length;
+  let insertQuery = "INSERT INTO TOPICS VALUES (?,?)";
+
+  for (let i = 0; i < numTopics; i++) {
+      let params = [ topicData.subID, topic[i] ];
+      let preparedQuery = mysql.format(insertQuery, params);
+      console.log(preparedQuery);
+  
+      pool.query(preparedQuery, (err, response) => {  // send it
+        console.log("Connecting to database...\n");
+        if(err) {
+          console.error(err);
+          return;
+        }
+        console.log("topic tag added to TOPICS table! Server response code: " + response.insertId);
+      });
+    }//for
+
+  res.send("topic(s) added to system"); 
+});
+
+
+
+
+
+
+// used for INSERT queries on the NOMINATED table. 
+// don't really need to use a parameterized query here, but whatever
+
+router.post('/insert-nominated-reviewers', (req, res) => {  
+  let noms = req.body;
+  let insertQuery = "INSERT INTO NOMINATED VALUES (?,?)";
+
+  for (let i = 0; i < 4; i++) {
+    if (noms.reviewer[i] !== null) {
+      let params = [ noms.subID, noms.reviewer[i] ];
+      let preparedQuery = mysql.format(insertQuery, params);
+      console.log(preparedQuery);
+  
+      pool.query(preparedQuery, (err, response) => {  // send it
+        console.log("Connecting to database...\n");
+        if(err) {
+          console.error(err);
+          return;
+        }
+        console.log("nominated reviewer added to NOMINATED table!");
+        console.log(response.insertId);     
+      });
+    } //if
+  }//for
+
+  res.send("nomination(s) added to system"); 
+});
+
+router.get("/insert-nominated-reviewers", function(req, res, next){
+  res.send("API for INSERT (NOMINATED) queries is working properly");
+});
+
+
+
 
 
 
@@ -85,7 +166,7 @@ router.post('/insert-submission', (req, res) => {
 
   console.log(preparedQuery);
   pool.query(preparedQuery, (err, response) => {
-    console.log("Connected to database...\n");
+    console.log("Connecting to database...\n");
     if (err) {
       console.error(err);
       return;
