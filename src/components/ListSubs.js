@@ -3,14 +3,6 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import '../App.css';
 
-import Nav from 'react-bootstrap/Nav';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
-import Comments from './comments.js';
-
 
 class ListSubs extends React.Component {
 
@@ -123,13 +115,6 @@ class ListSubs extends React.Component {
             </tbody>
           </Table>
         </Container>
-        <Router>
-              <div id="content-section">
-                <Switch>
-                  <Route path="/upload" component={(props) => <Comments {...props} subID={this.state.subID} />} />
-                </Switch>
-              </div>
-        </Router>
       </div>
     );
   }
