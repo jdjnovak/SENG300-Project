@@ -358,7 +358,7 @@ class AddUser extends Admin {
             onChange={this.myChangeHandler}
           /><br/><br/>
 
-          <p>Password for the user:</p>
+          <p>Password for the user (must be "strong"; minimum 8 chars):</p>
           <input
             type='password'
             name='password'

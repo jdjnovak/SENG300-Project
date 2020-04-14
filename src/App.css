@@ -9,7 +9,7 @@
 
 #content-section {
 } */
-body {
+/* body {
 	background-color: #fff;
 	background-image:
 		linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
@@ -27,7 +27,7 @@ body::after {
   right: 0;
   position: absolute;
   z-index: -1;   
-}
+} */
 
 .inputfile {
 	width: 0.1px;
@@ -61,4 +61,23 @@ body::after {
 .submissionForm input, .submissionForm textarea {
   width: 100%;
   padding: 3px 7px;
+}
+
+#list-submissions th button {
+  font-weight: 500;
+  padding: 8px 10px;
+  background: none;
+  color: #FFF;
+  text-align: left;
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#list-submissions th {
+  padding: 0;
+  margin: 0;
+  background: #343a40;
+  color: #FFF;
+  font-weight: 500;
 }
