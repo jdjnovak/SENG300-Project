@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import CommentsTable from '../components/CommentsTable.js';
 import commentsJson from '../data/test_data.json';
 import ListSubs from './ListSubs.js';
+//import { render } from '@testing-library/react';
 
 
 function GetLastSubmitDate() {
@@ -39,38 +40,45 @@ function GetJournalStatus() {
     return status;
 }
 
-function Home() {
-	return (
-      <div id="outer-container">
-        <div id="submission-summary" className="pt-5">
-          <h1 className="text-center">Review your submissions</h1>
-          <Container>
-            <Row>
-              <Container>
-                <Row>
-                  <Col className="text-right">Last submitted paper:</Col>
-                  <Col>{GetLastSubmitDate()}</Col>
-                </Row>
-                <Row>
-                  <Col className="text-right">Status:</Col>
-                  <Col>{GetJournalStatus()}</Col>
-                </Row>
-                <br/>
-                <h3 className="pt-5, text-center">Comments</h3><br/>
-                <CommentsTable />
-              </Container>
-            </Row>
-          </Container>
+class Home extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+        <div id="outer-container">
+          <div id="submission-summary" className="pt-5">
+            <h1 className="text-center">Review your submissions</h1>
+            <Container>
+              <Row>
+                <Container>
+                  <Row>
+                    <Col className="text-right">Last submitted paper:</Col>
+                    <Col>{GetLastSubmitDate()}</Col>
+                  </Row>
+                  <Row>
+                    <Col className="text-right">Status:</Col>
+                    <Col>{GetJournalStatus()}</Col>
+                  </Row>
+                  <br/>
+                  <h3 className="pt-5, text-center">Comments</h3><br/>
+                  <CommentsTable />
+                </Container>
+              </Row>
+            </Container>
+          </div>
+
+
+          <div style={{margin: '120px auto 30px', textAlign: 'center'}}><h2>Viewing: &nbsp;All Research Submissions</h2></div>
+          <ListSubs userEmail={this.props.userEmail}/>
+          
+          <br/><br/><br/><br/>
+
         </div>
-
-
-        <div style={{margin: '120px auto 30px', textAlign: 'center'}}><h2>Viewing: &nbsp;All Research Submissions</h2></div>
-        <ListSubs />
-        
-        <br/><br/><br/><br/>
-
-      </div>
-	);
+    );
+  }
 }
 
 export default Home;

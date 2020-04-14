@@ -60,9 +60,9 @@ function App() {
               <Switch>
                 <Route path="/admin" component={Admin} />
                 <Route path="/listsubs" component={ListSubs} />
-                <Route exact path="/" component={Home} />
+                <Route exact path="/" component={(props) => <Home {...props} userEmail={user.email} />} />
                 <Route path="/upload" component={(props) => <Upload {...props} userEmail={user.email} />} />
-				        <Route path ="/comments" component={Comments}/>
+				        <Route path ="/comments" component={(props) => <Comments {...props} userEmail={user.email} />}/>
                 <Route component={NotFound} />
               </Switch>
             </div>

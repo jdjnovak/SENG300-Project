@@ -1,20 +1,37 @@
-import React from 'react';
+import React  from 'react';
+import Container from 'react-bootstrap/Container';
+import Table from 'react-bootstrap/Table';
+import '../App.css';
 
+
+function setUserEmail (email) {
+  if ( typeof setUserEmail.ue == 'undefined' ) {
+    setUserEmail.ue = email;
+  }
+  return setUserEmail.ue;
+}
 
 class Review extends React.Component {
 
   constructor(props) {
     super(props);
+    
     this.state = {
       subID: String(window.location).split('=')[1],
-      reviewerID: '',
+      reviewerID: setUserEmail(props.userEmail),
       deadline: '',
       recommendation: '',
       comments: '',
       serverResponse: "",
-      activeFunction: 2
+      activeFunction: 2,
+
+      subInATable: null,
+      shouldRun: true
     };
   }
+
+
+
 
 
   resetState = (inclServResponse) => {
@@ -114,15 +131,70 @@ class Review extends React.Component {
   }
 
 
+
+  getSubmissionDeets = (shouldRun) => {
+    if (shouldRun) {  // protects against inf. loop
+      this.setState({shouldRun: false});
+
+      let myQuery = "SELECT * FROM SUBMISSION S, TOPICS T WHERE S.subID = " + this.state.subID + " AND S.subID = T.subID";
+      //let myQuery = "SELECT S.subID, S.title, S.description, S.status, S.fileURL, T.subID AS TopicID," +
+                    //"T.topic FROM SUBMISSION S LEFT JOIN TOPICS T ON S.subID = T.subID";
+  
+      fetch('http://localhost:9000/select', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: myQuery })
+      }).then(response => {
+        response.json().then(data => {
+          let subInfo = JSON.parse(JSON.stringify(data));
+          console.log(data);
+         
+          let subTable = (
+            <Container>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Research Title</th>
+                    <th>Description</th>
+                    <th>Topic</th>
+                    <th>Status</th>
+                    <th>File</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr key={"only1"}>
+                    <td>{subInfo[0].title}</td>
+                    <td>{subInfo[0].description}</td>
+                    <td>{subInfo[0].topic}</td>
+                    <td>{subInfo[0].status}</td>
+                    <td><a href={subInfo[0].fileURL}>download</a></td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Container>);
+
+          this.setState({subInATable: subTable});
+        });
+      });
+    }
+  }
+
+
   render() {
     return (
       <div id="renderContainer">
-        <div id="Review Submission Form" style={{textAlign: "right", margin: "120px 80px 0 0", float: "left", height: "100vh", width: "200px"}}>
+        <div id="Review Submission Form" style={{textAlign: "right", margin: "120px 80px 0 0", float: "left", height: "100%", width: "200px"}}>
           <button onClick={ (ev) => this.changeFunction(1, this.state.activeFunction, ev) }>View / Edit Reviews</button><br/><br/>
           <button onClick={ (ev) => this.changeFunction(2, this.state.activeFunction, ev) }>Add New Review</button><br/><br/>
         </div>
         <div id="ReviewForm" style={{float: "left", margin: "60px 0 0", width: "calc(100vw - 400px)"}}>
-          <h1>Review Submission Form</h1><br />
+    <h1>Viewing: &nbsp; Article Title Goes Here</h1>
+          <br/>
+          {this.getSubmissionDeets(this.state.shouldRun)}
+          {this.state.subInATable}
+          <br/><br/><br/>
+          <h2>Review this article:</h2>
+          <br/>
           {this.selectScreen()}
         </div>
       </div>
@@ -246,19 +318,19 @@ class EditReview extends ViewEditReview {
 
   render() {
     return (
-      <div>
+      <div className='submissionForm'>
         <h4>Viewing: &nbsp;{this.props.reviewInfo.subID}</h4> <br />
 
         <form onSubmit={this.mySubmitHandler_UPDATE}>
-		  <p>SubmissionID:</p>
-		  <input
-			type='text'
-			name='subID'
-			value={this.state.subID}
-			onChange={this.myChangeHandler}
-		  /><br/><br/>
+          <p>SubmissionID:</p>
+          <input
+          type='text'
+          name='subID'
+          value={this.state.subID}
+          onChange={this.myChangeHandler}
+          /><br/><br/>
 		  
-          <p>ReviewerID:</p>
+          <p>Reviewing as:</p>
           <input
             type='text'
             name='reviewerID'
@@ -323,52 +395,49 @@ class AddReview extends Review {
 
   render() {
     return(
-      <div id="topLevelContainer1">
-        <h4>Add new Review:</h4><br />
+      <div className='submissionForm' style={{width: '700px'}}>
+
+          <p style={{paddingBottom: '10px'}}><strong>My deadline for submitting this review is: &nbsp; (deadline goes here)</strong></p>
+          {this.state.deadline}
+
         <form onSubmit={this.mySubmitHandler_INSERT}>
-		
-		  <p>SubmissionID:</p>
-		  <input
-			type='text'
-			name='subID'
-			value={this.state.subID}
-			onChange={this.myChangeHandler}
-		  /><br/><br/>
-			
-          <p>ReviewerID:</p>
+          <p>SubmissionID:</p>
+          <input
+          type='text'
+          name='subID'
+          value={this.state.subID}
+          onChange={this.myChangeHandler}
+          /><br/><br/>
+        
+          <p>Reviewing as:</p>
           <input
             type='text'
             name='reviewerID'
+            style={{width: '300px'}}
+            maxLength={50}
             value={this.state.reviewerID}
             onChange={this.myChangeHandler}
           /><br/><br/>
 
-          <p>revised journal deadline: (in form "YYYY-MM-DD")</p>
-          <input
-            type='date'
-            name='deadline'
-            value={this.state.deadline}
-            onChange={this.myChangeHandler}
-          /><br/><br/>
+          <p>Your recommendation:</p>
+          <select value={this.state.recommendation} onChange={this.myChangeHandler}>
+            <option value="" disabled> &nbsp; select one </option>
+            <option value="Major Review">Major Review</option>
+            <option value="Minor Review">Minor Review</option>
+            <option value="Accept">Accept</option>
+          </select><br/><br/>
 
-          <p>Reviewer recommends (needs Major Review, Minor Review, Accepted):</p>
-          <input
-            type='text'
-            name='recommendation'
-            value={this.state.recommendation}
-            onChange={this.myChangeHandler}
-          /><br/><br/>
-
-          <p>Comments:</p>
-          <input
+          <p>Comments for the author:</p>
+          <textarea
             type='text'
             name='comments'
-            size = '100'
+            style={{ height: '150px'}}
+            maxLength={500}
             value={this.state.comments}
             onChange={this.myChangeHandler}
           /><br/><br/>
 
-          <input type='submit' value="Add Review to system" />
+          <input type='submit' value="Submit Review" />
         </form>
 
         <div id="statusMsg">
@@ -378,6 +447,7 @@ class AddReview extends Review {
             </div>
           </div>
         </div>
+
       </div>
     );
   }
