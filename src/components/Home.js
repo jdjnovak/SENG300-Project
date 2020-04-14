@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import CommentsTable from '../components/CommentsTable.js';
 import commentsJson from '../data/test_data.json';
+import ListSubs from './ListSubs.js';
 
 
 function GetLastSubmitDate() {
@@ -40,25 +41,34 @@ function GetJournalStatus() {
 
 function Home() {
 	return (
-      <div id="submission-summary" className="pt-5">
-        <h1 className="text-center">Review your submissions</h1>
-        <Container>
-          <Row>
-            <Container>
-              <Row>
-                <Col className="text-right">Last submitted paper:</Col>
-                <Col>{GetLastSubmitDate()}</Col>
-              </Row>
-              <Row>
-                <Col className="text-right">Status:</Col>
-                <Col>{GetJournalStatus()}</Col>
-              </Row>
-              <br/>
-              <h3 className="pt-5, text-center">Comments</h3>
-              <CommentsTable />
-            </Container>
-          </Row>
-        </Container>
+      <div id="outer-container">
+        <div id="submission-summary" className="pt-5">
+          <h1 className="text-center">Review your submissions</h1>
+          <Container>
+            <Row>
+              <Container>
+                <Row>
+                  <Col className="text-right">Last submitted paper:</Col>
+                  <Col>{GetLastSubmitDate()}</Col>
+                </Row>
+                <Row>
+                  <Col className="text-right">Status:</Col>
+                  <Col>{GetJournalStatus()}</Col>
+                </Row>
+                <br/>
+                <h3 className="pt-5, text-center">Comments</h3>
+                <CommentsTable />
+              </Container>
+            </Row>
+          </Container>
+        </div>
+
+
+        <div style={{margin: '120px auto 30px', textAlign: 'center'}}><h2>Viewing All Research Submissions</h2></div>
+        <ListSubs />
+        
+        <br/><br/><br/><br/>
+
       </div>
 	);
 }

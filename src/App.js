@@ -13,11 +13,13 @@ import Upload from './components/Upload.js';
 import NotFound from './components/NotFound.js';
 import Admin from './components/Admin.js';
 import Comments from './components/comments.js';
+import ListSubs from './components/ListSubs.js';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+
 
 function App() {
   const { isLoading, user, loginWithRedirect, logout } = useContext(Auth0Context);
@@ -45,7 +47,7 @@ function App() {
               </Nav>
             </Navbar.Collapse>
 
-            <h4 id="currentUserEmail" className="pr-3 text-light">{user.email}</h4>
+            <div style={{margin: '2px 20px 0 0'}}><h5 id="currentUserEmail" className="pr-3 text-light">{user.email}</h5></div>
             <Button
               onClick={() => logout({ returnTo: window.location.origin })}
               className="">
@@ -57,6 +59,7 @@ function App() {
             <div id="content-section">
               <Switch>
                 <Route path="/admin" component={Admin} />
+                <Route path="/listsubs" component={ListSubs} />
                 <Route exact path="/" component={Home} />
                 <Route path="/upload" component={(props) => <Upload {...props} userName={user.email} />} />
 				<Route path ="/comments" component={Comments}/>
