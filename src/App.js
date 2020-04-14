@@ -43,7 +43,7 @@ function App() {
                 <Nav.Link href="/admin">Admin</Nav.Link>
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/upload">Upload</Nav.Link>
-				<Nav.Link href="/comments">Comments</Nav.Link>
+				        <Nav.Link href="/comments">Comments</Nav.Link>
               </Nav>
             </Navbar.Collapse>
 
@@ -61,8 +61,8 @@ function App() {
                 <Route path="/admin" component={Admin} />
                 <Route path="/listsubs" component={ListSubs} />
                 <Route exact path="/" component={Home} />
-                <Route path="/upload" component={(props) => <Upload {...props} userName={user.email} />} />
-				<Route path ="/comments" component={Comments}/>
+                <Route path="/upload" component={(props) => <Upload {...props} userEmail={user.email} />} />
+				        <Route path ="/comments" component={Comments}/>
                 <Route component={NotFound} />
               </Switch>
             </div>

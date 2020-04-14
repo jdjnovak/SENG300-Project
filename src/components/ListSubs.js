@@ -3,13 +3,22 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import '../App.css';
 
+import Nav from 'react-bootstrap/Nav';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+import Comments from './comments.js';
+
 
 class ListSubs extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      tableRows: null
+      tableRows: null,
+      subID: null
     };
     this.shouldRun = true;
     this.currentSort = "title";
@@ -65,20 +74,25 @@ class ListSubs extends React.Component {
           let origIndex = 0;
           let rowIndex = 1;
           for (let i = 0; i < numSubs; i++) {
+
             origIndex = i;
+            this.setState({subID: subInfo[origIndex].subID});
             while ( (i+1 < numSubs)  &&  (subInfo[i+1].subID === subInfo[origIndex].subID) ) {
               subInfo[origIndex].topic += ", " + subInfo[i+1].topic;
               i++;
             }
-            tableRows.push(
-              <tr key={rowIndex}>
-                <td>{rowIndex}</td>
-                <td>{subInfo[origIndex].title}</td>
-                <td>{subInfo[origIndex].description}</td>
-                <td>{subInfo[origIndex].topic}</td>
-                <td>{subInfo[origIndex].status}</td>
-                <td><a href={subInfo[origIndex].fileURL}>download</a></td>
-              </tr>);
+
+          tableRows.push(
+            <tr key={rowIndex}>
+              <td>{rowIndex}</td>
+
+              <td><a href={'comments?subID=' + subInfo[origIndex].subID}>{subInfo[origIndex].title}</a></td>
+              {/* <Nav.Link href="/comments">{subInfo[origIndex].title}</Nav.Link> */}
+              <td>{subInfo[origIndex].description}</td>
+              <td>{subInfo[origIndex].topic}</td>
+              <td>{subInfo[origIndex].status}</td>
+              <td><a href={subInfo[origIndex].fileURL}>download</a></td>
+            </tr>);
             rowIndex++;
           }
           this.setState({tableRows: tableRows});
@@ -109,6 +123,13 @@ class ListSubs extends React.Component {
             </tbody>
           </Table>
         </Container>
+        <Router>
+              <div id="content-section">
+                <Switch>
+                  <Route path="/upload" component={(props) => <Comments {...props} subID={this.state.subID} />} />
+                </Switch>
+              </div>
+        </Router>
       </div>
     );
   }

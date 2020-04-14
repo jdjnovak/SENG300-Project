@@ -183,6 +183,7 @@ class ViewEditUser extends Admin {
       let tableRows = [];
 
       for (let i = 0; i < size; i++) {
+        if (users[i].email === "default@nobody.net")  continue; // skip the default user. No need to show it.
         tableRows.push(<tr key={"row"+i}><td> &nbsp; {users[i].fName} &nbsp; </td><td> &nbsp; {users[i].lName} &nbsp; </td><td> &nbsp; {users[i].email} &nbsp; </td>
                        <td> &nbsp; {<button onClick={() => this.buttonHandler('view', i)}>View/Edit User</button>} &nbsp; </td>
                        <td> &nbsp; {<button onClick={() => this.buttonHandler('del', i)}>Delete User</button>} &nbsp; </td></tr>);

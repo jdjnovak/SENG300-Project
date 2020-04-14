@@ -22,7 +22,7 @@ class Upload extends Component {
       title: "",
       description: "",
       subDate: null, // gets calculated server-side, btw... might not need this
-      author: props.userName,
+      author: props.userEmail,
       revParentID: null,
       revDeadline: null,
       status: "Awaiting editor review",
@@ -81,8 +81,11 @@ class Upload extends Component {
     optionRows.push(<option key={"selectMsg"} value={'selectMsg'} disabled> &nbsp; - select reviewer -&nbsp; &nbsp; </option>);
     optionRows.push(<option key={"blankLine"} value={'blankLine'} disabled></option>);
 
-    for (let i = 0; i < size; i++)
+    for (let i = 0; i < size; i++) {
+      if (users[i].email === "default@nobody.net")
+        continue;
       optionRows.push(<option key={"val" + i} value={users[i].email}>{users[i].fName} {users[i].lName}</option>);
+    }
 
     return optionRows;
   }

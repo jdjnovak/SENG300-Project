@@ -56,7 +56,7 @@ function Home() {
                   <Col>{GetJournalStatus()}</Col>
                 </Row>
                 <br/>
-                <h3 className="pt-5, text-center">Comments</h3>
+                <h3 className="pt-5, text-center">Comments</h3><br/>
                 <CommentsTable />
               </Container>
             </Row>
@@ -64,7 +64,7 @@ function Home() {
         </div>
 
 
-        <div style={{margin: '120px auto 30px', textAlign: 'center'}}><h2>Viewing All Research Submissions</h2></div>
+        <div style={{margin: '120px auto 30px', textAlign: 'center'}}><h2>Viewing: &nbsp;All Research Submissions</h2></div>
         <ListSubs />
         
         <br/><br/><br/><br/>

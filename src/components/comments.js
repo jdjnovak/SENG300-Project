@@ -6,7 +6,7 @@ class Review extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      subID: '',
+      subID: String(window.location).split('=')[1],
       reviewerID: '',
       deadline: '',
       recommendation: '',
