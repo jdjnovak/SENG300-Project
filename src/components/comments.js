@@ -193,7 +193,7 @@ class Review extends React.Component {
           {this.getSubmissionDeets(this.state.shouldRun)}
           {this.state.subInATable}
           <br/><br/><br/>
-          <h2>Review this article:</h2>
+          <h2>Review this article: (don't show this section if user hasn't been assigned to review it)</h2>
           <br/>
           {this.selectScreen()}
         </div>
