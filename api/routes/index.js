@@ -92,7 +92,7 @@ router.post('/insert-topics', (req, res) => {
   let insertQuery = "INSERT INTO TOPICS VALUES (?,?)";
 
   for (let i = 0; i < numTopics; i++) {
-      let params = [ topicData.subID, topic[i] ];
+      let params = [ topicData.subID, escapeString(topic[i]) ];
       let preparedQuery = mysql.format(insertQuery, params);
       console.log(preparedQuery);
   
@@ -160,8 +160,8 @@ router.post('/insert-submission', (req, res) => {
   console.log(dateFormatted);
   let sub = req.body;
   let insertQuery = "INSERT INTO SUBMISSION VALUES (?,?,?,?,?,?,?,?,?)";
-  let params = ["DEFAULT", sub.fileURL, sub.title, sub.description, dateFormatted,
-    sub.author, sub.revParentID, sub.revDeadline, sub.status];
+  let params = ["DEFAULT", sub.fileURL, escapeString(sub.title), escapeString(sub.description), dateFormatted,
+    sub.author, sub.revParentID, sub.revDeadline, escapeString(sub.status)];
   let preparedQuery = mysql.format(insertQuery, params);
 
   console.log(preparedQuery);
@@ -190,6 +190,21 @@ router.get("/insert-submission", function(req, res, next) {
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'API is up and running on port 9000!' });
 });
+
+
+function escapeString (st) {
+  let escapedSt = "";
+  const length = st.length;
+  for (let i = 0 ; i < length; i++) {
+    if (st[i] === "'")
+      escapedSt += '\'';
+    else if (st[i] === '"')
+      escapedSt += "\"";
+    else 
+      escapedSt += st[i];
+  }
+  return escapedSt;
+}
 
 
 module.exports = router;

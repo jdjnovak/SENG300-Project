@@ -120,6 +120,21 @@ class Upload extends Component {
   }
 
 
+  escapeString = st => {
+    let escapedSt = "";
+    const length = st.length;
+    for (let i = 0 ; i < length; i++) {
+      if (st[i] === "'")
+        escapedSt += "\\'";
+      else if (st[i] === '"')
+        escapedSt += '\\"';
+      else 
+        escapedSt += st[i];
+    }
+    return escapedSt;
+  }
+
+
   mySubmitHandler_INSERTsubmission = (event) => {
 
     // first upload file to Firebase storage
@@ -132,6 +147,7 @@ class Upload extends Component {
         const progress =
           Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         this.setState({ progress });
+        //this.setState({description: this.escapeString(this.state.description)});
       },
       (error) => {
         console.log(error);
@@ -164,8 +180,8 @@ class Upload extends Component {
 
           // next, find what auto-generated subID the submission was given by the db
           let myQuery = "SELECT subID FROM SUBMISSION WHERE fileURL = '" + this.state.fileURL + 
-                        "' AND title = '" + this.state.title + "' AND description = '" +
-                        this.state.description + "'";
+                        "' AND title = '" + this.escapeString(this.state.title) + 
+                        "' AND description = '" + this.escapeString(this.state.description) + "'";
           fetch('http://localhost:9000/select', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -193,23 +209,26 @@ class Upload extends Component {
                   console.log(msg);
 
 
-                  // now add the topic tags to that table
-                  fetch('http://localhost:9000/insert-topics', {  // this will need to be parameterized in the API
-                  method: 'POST',
-                  headers: {'Content-Type': 'application/json'},
-                  body: JSON.stringify({
-                    subID: subIDForThisSubmission,
-                    topics: this.state.topics
-                  })  // convert the state to JSON and send it as the POST body 
-                  }).then(response => {
-                    response.text().then(msg => {
-                      this.setState({serverResponse: JSON.stringify(msg)});
-                      console.log(msg);
+                  // now add the topic tags to that table (if there are any)
+                  if (this.state.topics !== "") {
+                    fetch('http://localhost:9000/insert-topics', {  // this will need to be parameterized in the API
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                      subID: subIDForThisSubmission,
+                      topics: this.state.topics
+                    })  // convert the state to JSON and send it as the POST body 
+                    }).then(response => {
+                      response.text().then(msg => {
+                        this.setState({serverResponse: JSON.stringify(msg)});
+                        console.log(msg);
 
-                      // and finally, clear the form fields
-                      this.resetSubmission(); 
-                    }); //inersert-topics
-                  });
+                        // and finally, clear the form fields
+                        this.resetSubmission(); 
+                      }); //inersert-topics
+                    });
+                  }
+                
 
                 }); //insert-nominated-reviewers
               });
