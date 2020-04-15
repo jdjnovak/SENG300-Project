@@ -146,7 +146,30 @@ router.get("/insert-nominated-reviewers", function(req, res, next){
   res.send("API for INSERT (NOMINATED) queries is working properly");
 });
 
+// used for journal queries, specifically for JOURNAL. 
+// It's parameterized (safe), since it's using user-input form data,
 
+router.post('/insert-journal', (req, res) => {
+  var date = dateObject.create();
+  var pubDate = date.format('Y-m-d');
+  console.log(pubDate);
+  let journal = req.body;
+  let insertQuery = "INSERT INTO JOURNAL VALUES (?,?,?,?,?)";
+  let params = ["DEFAULT", journal.fileURL, escapeString(journal.title), pubDate, journal.editorID];
+  let preparedQuery = mysql.format(insertQuery, params);
+
+  console.log(preparedQuery);
+  pool.query(preparedQuery, (err, response) => {
+    console.log("Connecting to database...\n");
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("article submission added to JOURNAL table!");
+    console.log(response.insertId);
+    res.send("journal received by the server");
+  });
+});
 
 
 

@@ -10,6 +10,7 @@ import { Auth0Context } from './contexts/auth0-context';
 
 import Home from './components/Home.js';
 import Upload from './components/Upload.js';
+import Editor from './components/Editor.js';
 import NotFound from './components/NotFound.js';
 import Admin from './components/Admin.js';
 import Comments from './components/comments.js';
@@ -43,6 +44,7 @@ function App() {
                 <Nav.Link href="/admin">Admin</Nav.Link>
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/upload">Upload</Nav.Link>
+				<Nav.Link href="/editor">Editor</Nav.Link>
 				        <Nav.Link href="/comments">Comments</Nav.Link>
               </Nav>
             </Navbar.Collapse>
@@ -62,6 +64,7 @@ function App() {
                 <Route path="/listsubs" component={ListSubs} />
                 <Route exact path="/" component={(props) => <Home {...props} userEmail={user.email} />} />
                 <Route path="/upload" component={(props) => <Upload {...props} userEmail={user.email} />} />
+				<Route path="/editor" component={(props) => <Editor {...props} userEmail={user.email} />} />
 				        <Route path ="/comments" component={(props) => <Comments {...props} userEmail={user.email} />}/>
                 <Route component={NotFound} />
               </Switch>
