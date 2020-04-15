@@ -83,6 +83,96 @@ router.get("/select", function(req, res, next) {
 
 
 
+
+
+
+
+
+
+// used for UPDATE queries, specifically for SUBMISSIONS
+
+router.post('/update-submission', (req, res) => {
+  let query = req.body.query;
+  console.log("Query string received from client:\n" + query);
+  pool.query(query, (err, response) => {
+    console.log("Connecting to database...\n");
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("Result of query \"" + query + "\":");
+    console.log(JSON.parse(JSON.stringify(response)));
+    res.send(response);
+  });
+})
+
+
+
+
+
+
+// used for journal queries, specifically for JOURNAL. 
+// It's parameterized (safe), since it's using user-input form data,
+
+router.post('/insert-journal', (req, res) => {
+  var date = dateObject.create();
+  var pubDate = date.format('Y-m-d');
+  console.log(pubDate);
+  let journal = req.body;
+  let insertQuery = "INSERT INTO JOURNAL VALUES (?,?,?,?,?)";
+  let params = ["DEFAULT", journal.fileURL, escapeString(journal.title), pubDate, journal.editorID];
+  let preparedQuery = mysql.format(insertQuery, params);
+
+  console.log(preparedQuery);
+  pool.query(preparedQuery, (err, response) => {
+    console.log("Connecting to database...\n");
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("article submission added to JOURNAL table!");
+    console.log(response.insertId);
+    res.send("journal received by the server");
+  });
+});
+
+
+
+
+
+
+
+
+
+
+// used for INSERT queries on the REQUESTS table. 
+
+router.post('/insert-requests', (req, res) => {  
+  const requestData = req.body;
+  let insertQuery = "INSERT INTO REQUESTS VALUES (?,?)";
+  let params = [ requestData.subID, requestData.reviewerID];
+  let preparedQuery = mysql.format(insertQuery, params);
+  console.log(preparedQuery);
+
+  pool.query(preparedQuery, (err, response) => {  // send it
+    console.log("Connecting to database...\n");
+    if(err) {
+      console.error(err);
+      return;
+    }
+    console.log("request added to REQUESTS table! Server response code: " + response); //used to be response.insertId
+  });
+
+  res.send("request added to system!"); 
+});
+
+
+
+
+
+
+
+
 // used for INSERT queries on the TOPICS table. 
 
 router.post('/insert-topics', (req, res) => {  

@@ -84,3 +84,11 @@ body::after {
   color: #FFF;
   font-weight: 500;
 }
+.list-submissions .container-override {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.reviewTable td {
+  padding: 8px 4px
+}
