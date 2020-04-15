@@ -60,7 +60,7 @@ class ListSubs extends React.Component {
       }).then(response => {
         response.json().then(data => {
           let subInfo = JSON.parse(JSON.stringify(data));
-          console.log(data);
+          //console.log(data);
           const numSubs = subInfo.length;
           let tableRows = [];
           let origIndex = 0;
@@ -80,7 +80,7 @@ class ListSubs extends React.Component {
 
               <td><a href={'comments?subID=' + subInfo[origIndex].subID}>{subInfo[origIndex].title}</a></td>
               {/* <Nav.Link href="/comments">{subInfo[origIndex].title}</Nav.Link> */}
-              <td>{subInfo[origIndex].description}</td>
+              <td style={{maxWidth: '570px'}}>{subInfo[origIndex].description}</td>
               <td>{subInfo[origIndex].topic}</td>
               <td>{subInfo[origIndex].status}</td>
               <td><a href={subInfo[origIndex].fileURL}>download</a></td>
@@ -97,7 +97,7 @@ class ListSubs extends React.Component {
   render() {
     return (
       <div id="list-submissions">
-        <Container>
+        <Container className='container-override'>
           <Table striped bordered hover>
             <thead>
               <tr>

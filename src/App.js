@@ -14,6 +14,7 @@ import NotFound from './components/NotFound.js';
 import Admin from './components/Admin.js';
 import Comments from './components/comments.js';
 import ListSubs from './components/ListSubs.js';
+import Editor from './components/Editor.js';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -40,7 +41,7 @@ function App() {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link href="/admin">Admin</Nav.Link>
+                {user.email === "admin@123.com" && <Nav.Link href="/admin">Admin</Nav.Link>}
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/upload">Upload</Nav.Link>
 				        <Nav.Link href="/comments">Comments</Nav.Link>
@@ -59,6 +60,7 @@ function App() {
             <div id="content-section">
               <Switch>
                 <Route path="/admin" component={Admin} />
+                <Route path="/editor" component={Editor} />
                 <Route path="/listsubs" component={ListSubs} />
                 <Route exact path="/" component={(props) => <Home {...props} userEmail={user.email} />} />
                 <Route path="/upload" component={(props) => <Upload {...props} userEmail={user.email} />} />
